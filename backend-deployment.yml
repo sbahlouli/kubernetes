@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata: 
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: bahloulisaid/backend:latest
+        env:
+        - name: DB_USERNAME
+          value: utilisateur
+        - name: DB_PASSWORD
+          value: bob123
+        - name: DB_HOST
+          value: postgres-service
+        - name: FRONT_URL
+          value: http://192.168.49.2:32222
+        - name: DB_NAME
+          value: db
+          
+        volumeMounts:
+          - name: volume
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
